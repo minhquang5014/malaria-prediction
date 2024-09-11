@@ -1,6 +1,5 @@
 from tensorflow.keras.layers import Conv2D, Activation, MaxPooling2D, Dense, Flatten, Dropout
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.layers import Input, BatchNormalization
 
 def sequential_model(IMG_SIZE = 224):
