@@ -12,7 +12,7 @@ def sample_data():
         split=['train'])
     return dataset, dataset_info
 
-def splits(dataset, train, val, test):
+def splits(dataset, train=0.9, val=0.05, test=0.05):
     # dataset = tf.data.Dataset.range(40)
     dataset_size = len(dataset)
     # print(list(dataset.as_numpy_iterator()))
@@ -65,7 +65,7 @@ def box(IMG_SIZE=224):
     x = tf.clip_by_value(x - w, 0, IMG_SIZE)
     y = tf.clip_by_value(y - h, 0, IMG_SIZE)
 
-    bottom_x = tf.clip_bu_value(x + w, 0, IMG_SIZE)
+    bottom_x = tf.clip_by_value(x + w, 0, IMG_SIZE)
     bottom_y = tf.clip_by_value(y + h, 0, IMG_SIZE)
 
     w = bottom_x - x
@@ -75,3 +75,7 @@ def box(IMG_SIZE=224):
     if h == 0:
         h = 1 
     return y, x, h, w
+
+dataset, dataset_info = sample_data()
+train_dataset, val_dataset, test_dataset = splits(dataset[0])
+print(dataset_info)
