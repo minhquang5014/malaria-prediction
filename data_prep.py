@@ -41,7 +41,37 @@ def augment(image, label):
     image = random_flip_up_down(image)
     return image, label
 
+def calculate_lamda(concentration1=0.2, concentration0=0.2):
+    lamda = tfp.distributions.Beta(concentration1, concentration0).sample(1)[0]
+    return lamda
+
 def mixup(train_dataset_1, train_dataset_2):
-    """this function is for mixing up tha dataset with a weight"""
+    """Mixup data augmentation - this function is for mixing up tha dataset with a weight"""
     (image_1, label_1), (image_2, label_2) = train_dataset_1, train_dataset_2
-    lamda
+    lamda = calculate_lamda()
+    image = lamda*image_1 + (1-lamda) * image_2
+    label = lamda * tf.cast(label_1, dtype=tf.float32) + (1-lamda)*tf.case(label_2, dtype=tf.float32)
+    return image, label
+
+def box(IMG_SIZE=224):
+    """Creating the bbox for cropping a region of interest in an image 
+    and padding it to another image"""
+    x = tf.cast(tfp.distributions.Uniform(0, IMG_SIZE).sample(1)[0], dtype=tf.int32)
+    y = tf.cast(tfp.distributions.Uniform(0, IMG_SIZE).sample(1)[0], dtype=tf.int32)
+    lamda = calculate_lamda()
+    w = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda))
+    h = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda))
+
+    x = tf.clip_by_value(x - w, 0, IMG_SIZE)
+    y = tf.clip_by_value(y - h, 0, IMG_SIZE)
+
+    bottom_x = tf.clip_bu_value(x + w, 0, IMG_SIZE)
+    bottom_y = tf.clip_by_value(y + h, 0, IMG_SIZE)
+
+    w = bottom_x - x
+    if w == 0:
+        w = 1
+    h = bottom_y - y
+    if h == 0:
+        h = 1 
+    return y, x, h, w
