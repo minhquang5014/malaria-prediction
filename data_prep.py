@@ -1,15 +1,14 @@
 import tensorflow_datasets as tfds
-
-dataset, dataset_info = tfds.load(
-    'malaria',
-    with_info=True,
-    as_supervised=True,
-    shuffle_files=True,
-    split=['train'])
-
-TRAIN_RATIO = 0.9
-VAL = 0.05
-TEST = 0.05
+from tensorflow.image import resize
+import tensorflow as tf
+def sample_data():
+    dataset, dataset_info = tfds.load(
+        'malaria',
+        with_info=True,
+        as_supervised=True,
+        shuffle_files=True,
+        split=['train'])
+    return dataset, dataset_info
 
 def splits(dataset, train, val, test):
     # dataset = tf.data.Dataset.range(40)
@@ -26,4 +25,9 @@ def splits(dataset, train, val, test):
     # print(list(test_dataset.as_numpy_iterator()))
     return train_dataset, val_dataset, test_dataset
 
-train_dataset, val_dataset, test_dataset = splits(dataset[0], TRAIN_RATIO, VAL, TEST)
+def resizing_and_rescaling(image, label, IMG_SIZE=224):
+    resized_image = resize(image, (IMG_SIZE, IMG_SIZE))
+    resized_image = tf.cast(resized_image, tf.float32)
+    normalized_image = resized_image / 255.0
+    return normalized_image, label
+
