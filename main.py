@@ -12,3 +12,4 @@ dataset, dataset_info = sample_data()
 # split the data into train dataset, validation data, and test set
 train_dataset, val_dataset, test_dataset = splits(dataset[0], TRAIN_RATIO, VAL, TEST)
 
+print(len(train_dataset), len(val_dataset), len(test_dataset))
