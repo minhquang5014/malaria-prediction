@@ -1,6 +1,8 @@
 import tensorflow_datasets as tfds
 from tensorflow.image import resize, rot90, random_flip_left_right, random_flip_up_down
 import tensorflow as tf
+import tensorflow_probability as tfp
+
 def sample_data():
     dataset, dataset_info = tfds.load(
         'malaria',
@@ -39,3 +41,7 @@ def augment(image, label):
     image = random_flip_up_down(image)
     return image, label
 
+def mixup(train_dataset_1, train_dataset_2):
+    """this function is for mixing up tha dataset with a weight"""
+    (image_1, label_1), (image_2, label_2) = train_dataset_1, train_dataset_2
+    lamda
