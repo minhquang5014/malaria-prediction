@@ -76,6 +76,9 @@ def box(IMG_SIZE=224):
         h = 1 
     return y, x, h, w
 
-dataset, dataset_info = sample_data()
-train_dataset, val_dataset, test_dataset = splits(dataset[0])
-print(dataset_info)
+# dataset, dataset_info = sample_data()
+# train_dataset, val_dataset, test_dataset = splits(dataset[0])
+# print(dataset_info)
+
+
+
