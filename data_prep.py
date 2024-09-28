@@ -60,8 +60,8 @@ def box(IMG_SIZE=224):
     x = tf.cast(tfp.distributions.Uniform(0, IMG_SIZE).sample(1)[0], dtype=tf.int32)
     y = tf.cast(tfp.distributions.Uniform(0, IMG_SIZE).sample(1)[0], dtype=tf.int32)
     lamda = calculate_lamda()
-    w = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda), dtpye=tf.int32)
-    h = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda), dtpye=tf.int32)
+    w = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda), dtype=tf.int32)
+    h = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda), dtype=tf.int32)
 
     x = tf.clip_by_value(x - w // 2, 0, IMG_SIZE - w)
     y = tf.clip_by_value(y - h // 2, 0, IMG_SIZE - h)
@@ -93,5 +93,5 @@ def cutmix(train_dataset_1, train_dataset_2, IMG_SIZE=224):
 
     image = image_1 - pad_1 + pad_2
 
-    return image, label_1, label_2
+    return image, label
 

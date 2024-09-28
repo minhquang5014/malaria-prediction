@@ -20,3 +20,6 @@ def compare_dataset(original, augmented):
     plt.title('Augmented image')
     plt.imshow(augmented)
 
+def visualize_cutmix(training_dataset):
+    image, label = next(iter(training_dataset))
+    plt.imshow(image[0])
