@@ -2,6 +2,7 @@ import tensorflow_datasets as tfds
 from tensorflow.image import resize, rot90, random_flip_left_right, random_flip_up_down
 import tensorflow as tf
 import tensorflow_probability as tfp
+from tensorflow.image import crop_to_bounding_box, pad_to_bounding_box
 
 def sample_data():
     dataset, dataset_info = tfds.load(
@@ -59,11 +60,11 @@ def box(IMG_SIZE=224):
     x = tf.cast(tfp.distributions.Uniform(0, IMG_SIZE).sample(1)[0], dtype=tf.int32)
     y = tf.cast(tfp.distributions.Uniform(0, IMG_SIZE).sample(1)[0], dtype=tf.int32)
     lamda = calculate_lamda()
-    w = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda))
-    h = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda))
+    w = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda), dtpye=tf.int32)
+    h = tf.cast(IMG_SIZE * tf.math.sqrt(1-lamda), dtpye=tf.int32)
 
-    x = tf.clip_by_value(x - w, 0, IMG_SIZE)
-    y = tf.clip_by_value(y - h, 0, IMG_SIZE)
+    x = tf.clip_by_value(x - w // 2, 0, IMG_SIZE - w)
+    y = tf.clip_by_value(y - h // 2, 0, IMG_SIZE - h)
 
     bottom_x = tf.clip_by_value(x + w, 0, IMG_SIZE)
     bottom_y = tf.clip_by_value(y + h, 0, IMG_SIZE)
@@ -80,5 +81,17 @@ def box(IMG_SIZE=224):
 # train_dataset, val_dataset, test_dataset = splits(dataset[0])
 # print(dataset_info)
 
+def cutmix(train_dataset_1, train_dataset_2, IMG_SIZE=224):
+    (image_1, label_1), (image_2, label_2) = train_dataset_1, train_dataset_2
+    lamda = calculate_lamda()
+    y, x, h, w = box()
+    crop_1 = crop_to_bounding_box(image_1, y, x, h, w)
+    pad_1 = pad_to_bounding_box(crop_1, y, x, IMG_SIZE, IMG_SIZE)
 
+    crop_2 = crop_to_bounding_box(image_2, y, x, h, w)
+    pad_2 = pad_to_bounding_box(crop_2, y, x, IMG_SIZE, IMG_SIZE)
+
+    image = image_1 - pad_1 + pad_2
+
+    return image, label_1, label_2
 
