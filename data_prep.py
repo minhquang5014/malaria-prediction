@@ -93,5 +93,8 @@ def cutmix(train_dataset_1, train_dataset_2, IMG_SIZE=224):
 
     image = image_1 - pad_1 + pad_2
 
+    lamda = tf.cast(1 - ((h*w)/(IMG_SIZE*IMG_SIZE)), dtype = tf.float32)
+    label = lamda * tf.cast(label_1, dtype=tf.float32) + (1-lamda)*tf.cast(label_2, dtype=tf.float32)
+
     return image, label
 
