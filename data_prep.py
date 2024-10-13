@@ -28,6 +28,7 @@ def splits(dataset, train=0.9, val=0.05, test=0.05):
     # print(list(test_dataset.as_numpy_iterator()))
     return train_dataset, val_dataset, test_dataset
 
+@tf.function
 def resizing_and_rescaling(image, label, IMG_SIZE=224):
     resized_image = resize(image, (IMG_SIZE, IMG_SIZE))
     resized_image = tf.cast(resized_image, tf.float32)

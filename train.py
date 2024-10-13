@@ -11,17 +11,23 @@ train_dataset, val_dataset, test_dataset = splits(dataset[0])
 
 # visualizer(val_dataset, dataset_info, 25)
 
+"""no need to mix up the data here
 train_dataset_1 = train_dataset.shuffle(buffer_size = 4096,).map(resizing_and_rescaling)
 train_dataset_2 = train_dataset.shuffle(buffer_size = 4096,).map(resizing_and_rescaling)
 
-mixed_dataset = tf.data.Dataset.zip(train_dataset_1, train_dataset_2)
+mixed_dataset = tf.data.Dataset.zip(train_dataset_1, train_dataset_2)"""
 
 train_dataset = (
-    mixed_dataset
+    train_dataset
     .shuffle(buffer_size=8, reshuffle_each_iteration=True)
-    .map(cutmix)
+    .map(resizing_and_rescaling)
     .batch(BATCH_SIZE)
     .prefetch(tf.data.AUTOTUNE)
 )
-
-visualize_cutmix(train_dataset)
+val_dataset = (
+    val_dataset
+    .shuffle(buffer_size=8, reshuffle_each_iteration=True)
+    .map(resizing_and_rescaling)
+    .batch(BATCH_SIZE)
+    .prefetch(tf.data.AUTOTUNE)
+)
