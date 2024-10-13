@@ -31,3 +31,7 @@ val_dataset = (
     .batch(BATCH_SIZE)
     .prefetch(tf.data.AUTOTUNE)
 )
+
+# print(train_dataset)
+# print(val_dataset)
+
